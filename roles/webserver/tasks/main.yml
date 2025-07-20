@@ -1,35 +1,47 @@
 ---
-- name: Install apache
+- name: Install Apache (httpd)
   become: true
   ansible.builtin.yum:
-    name: "httpd"
+    name: httpd
     state: present
 
-- name: Install git
+- name: Install PHP
   become: true
   ansible.builtin.yum:
-    name: "git"
+    name:
+      - php
+      - php-mysqlnd
     state: present
 
-- name: Clone tooling repo
+- name: Install Git
+  become: true
+  ansible.builtin.yum:
+    name: git
+    state: present
+
+- name: Remove default /var/www/html directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html
+    state: absent
+
+- name: Recreate html directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html
+    state: directory
+    mode: '0755'
+
+- name: Clone tooling repo into /var/www/html
   become: true
   ansible.builtin.git:
     repo: https://github.com/Sheviantos1/tooling.git
     dest: /var/www/html
     force: yes
 
-- name: Copy html content to one level up
-  become: true
-  command: cp -r /var/www/html/* /var/www/
-
-- name: Start Apache service
+- name: Ensure Apache is started and enabled
   become: true
   ansible.builtin.service:
     name: httpd
-    state: started
-
-- name: Remove /var/www/html directory
-  become: true
-  ansible.builtin.file:
-    path: /var/www/html
-    state: absent
+    state: restarted
+    enabled: yes
