@@ -20,7 +20,7 @@
 
 - name: Copy html content to one level up
   become: true
-  command: bash -c "shopt -s dotglob && cp -r /var/www/html/* /var/www/"
+  command: cp -r /var/www/html/* /var/www/
 
 - name: Start Apache service
   become: true
