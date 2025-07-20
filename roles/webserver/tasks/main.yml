@@ -28,7 +28,7 @@
     name: httpd
     state: started
 
-- name: recursively remove /var/www/html directory
+- name: recursively remove /var/www/html/html directory
   become: true
   ansible.builtin.file:
   path: /var/www/html/html
