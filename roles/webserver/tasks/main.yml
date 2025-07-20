@@ -1,47 +1,23 @@
 ---
-- name: Install Apache (httpd)
-  become: true
-  ansible.builtin.yum:
-    name: httpd
-    state: present
-
-- name: Install PHP
-  become: true
-  ansible.builtin.yum:
-    name:
-      - php
-      - php-mysqlnd
-    state: present
-
-- name: Install Git
-  become: true
-  ansible.builtin.yum:
-    name: git
-    state: present
-
-- name: Remove default /var/www/html directory
-  become: true
-  ansible.builtin.file:
-    path: /var/www/html
-    state: absent
-
-- name: Recreate html directory
-  become: true
-  ansible.builtin.file:
-    path: /var/www/html
-    state: directory
-    mode: '0755'
-
-- name: Clone tooling repo into /var/www/html
+- name: Clone tooling repo into temp folder
   become: true
   ansible.builtin.git:
     repo: https://github.com/Sheviantos1/tooling.git
-    dest: /var/www/html
+    dest: /tmp/tooling
     force: yes
 
-- name: Ensure Apache is started and enabled
+- name: Copy content from /tmp/tooling/html to /var/www/html
+  become: true
+  ansible.builtin.copy:
+    src: /tmp/tooling/html/
+    dest: /var/www/html/
+    owner: apache
+    group: apache
+    mode: '0755'
+    remote_src: yes
+
+- name: Restart Apache
   become: true
   ansible.builtin.service:
     name: httpd
     state: restarted
-    enabled: yes
