@@ -11,24 +11,24 @@
     name: "git"
     state: present
 
-- name: clone a repo
+- name: Clone tooling repo
   become: true
   ansible.builtin.git:
     repo: https://github.com/Sheviantos1/tooling.git
     dest: /var/www/html
     force: yes
 
-- name: copy html content to one level up
+- name: Copy html content to one level up
   become: true
-  command: cp -r /var/www/html /var/www/
+  command: bash -c "shopt -s dotglob && cp -r /var/www/html/* /var/www/"
 
-- name: Start service httpd, if not started
+- name: Start Apache service
   become: true
   ansible.builtin.service:
     name: httpd
     state: started
 
-- name: recursively remove /var/www/html directory
+- name: Remove /var/www/html directory
   become: true
   ansible.builtin.file:
     path: /var/www/html
