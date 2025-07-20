@@ -32,4 +32,4 @@
   become: true
   ansible.builtin.file:
     path: /var/www/html
-  state: absent
+    state: absent
