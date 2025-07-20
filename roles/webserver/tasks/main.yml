@@ -24,7 +24,7 @@
 
 - name: Copy html content to one level up
   become: true
-  command: cp -r /var/www/html/html/* /var/www/html/
+  command: cp -r /var/www/html/html/ /var/www/html/
 
 - name: Start Apache (httpd)
   become: true
